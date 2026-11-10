@@ -68,13 +68,9 @@
   header h1 {
     font-size: clamp(88px, 22vw, 220px);
     letter-spacing: -0.02em;
-    margin: 28px 0 24px;
+    margin: 0 0 22px;
   }
-  header p.tagline {
-    font-size: 20px;
-    max-width: 30em;
-    font-weight: 300;
-  }
+  header .hero-sub { margin-left: 0.28em; }
   .scroll-link {
     margin-top: 56px;
     color: var(--heading);
@@ -271,9 +267,8 @@
 <body>
 
 <header>
-  <span class="label" data-t="heroLabel">Small-batch bakes &middot; Amsterdam</span>
   <h1 data-t="brand">Luna</h1>
-  <p class="tagline" data-t="tagline">Baked at home, in small batches, and made to order.</p>
+  <span class="label hero-sub" data-t="heroSub">Amsterdam</span>
   <a class="scroll-link label" href="#menu" data-t="menuLink">View the menu</a>
 </header>
 
@@ -326,8 +321,7 @@
   const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const DEFAULT_TEXT = {
     brand: "Luna",
-    heroLabel: "Small-batch bakes · Amsterdam",
-    tagline: "Baked at home, in small batches, and made to order.",
+    heroSub: "Amsterdam",
     menuLink: "View the menu",
     menuLabel: "The menu",
     menuHeading: "What I bake",

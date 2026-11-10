@@ -86,8 +86,7 @@
   const ALLERGENS = ["Gluten","Crustaceans","Eggs","Fish","Peanuts","Soy","Milk","Nuts","Celery","Mustard","Sesame","Sulphites","Lupin","Molluscs"];
   const DEFAULT_TEXT = {
     brand: "Luna",
-    heroLabel: "Small-batch bakes · Amsterdam",
-    tagline: "Baked at home, in small batches, and made to order.",
+    heroSub: "Amsterdam",
     menuLink: "View the menu",
     menuLabel: "The menu",
     menuHeading: "What I bake",
@@ -152,9 +151,8 @@
         <summary>Edit headings, intro text, steps and footer</summary>
         <div class="grp">Top of the page</div>
         ${field("Wordmark (large name)", "text.brand", t.brand)}
-        ${field("Small line above it", "text.heroLabel", t.heroLabel)}
-        ${field("Tagline", "text.tagline", t.tagline)}
-        ${field("Link under the tagline", "text.menuLink", t.menuLink)}
+        ${field("Small line below the wordmark", "text.heroSub", t.heroSub)}
+        ${field("Link below it", "text.menuLink", t.menuLink)}
         <div class="grp">Menu section</div>
         ${field("Small label", "text.menuLabel", t.menuLabel)}
         ${field("Heading", "text.menuHeading", t.menuHeading)}
