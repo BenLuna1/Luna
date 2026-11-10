@@ -4,7 +4,7 @@ const LUNA = {
   "contact": {
     "whatsapp": "31600000000",
     "email": "hello@example.com",
-    "whatsappMessage": "Hello, I'd like to order: Example: 2 x 20cm Tiramisu. For Nov 12th. "
+    "whatsappMessage": "Hi Luna, I'd like to order: example: 2x 20cm Tiramisu. Pick-up on November 22nd at 11:00. "
   },
   "orderInfo": [
     [
@@ -31,61 +31,96 @@ const LUNA = {
   "menu": [
     {
       "name": "Tiramisu",
-      "desc": "Mascarpone cream, espresso and cognac-soaked savoiardi and with a dark chocolate collar.",
-      "allergens": [
-        "Gluten",
-        "Milk",
-        "Eggs"
-      ],
-      "photo": "tiramisu.jpg",
+      "desc": "Mascarpone cream, espresso and cognac-soaked savoiardi. Finished with a dark chocolate collar. ",
       "options": [
         {
-          "size": "20 cm round",
+          "size": "20 cm · serves 10–12",
           "price": "€60"
         },
         {
-          "size": "16 cm round",
+          "size": "16 cm · serves 6–8",
           "price": "€45"
         },
         {
-          "size": "8 cm round (minimum order: 4)",
+          "size": "8 cm · serves 1 (minimum 4)",
           "price": "€12"
         }
-      ]
-    },
-    {
-      "name": "Fraisier",
-      "desc": "Traditional French strawberry cake featuring layers of vanilla sponge, silky mousseline cream, and fresh strawberries, finished with a strawberry glaze. ",
+      ],
       "allergens": [
         "Gluten",
         "Milk",
         "Eggs"
       ],
-      "photo": "fraisier.jpg",
-      "options": [
-        {
-          "size": "20 cm round",
-          "price": "€55"
-        },
-        {
-          "size": "16 cm round",
-          "price": "€40"
-        }
-      ]
+      "photo": "tiramisu.jpg"
     },
     {
-      "name": "Madeline",
-      "desc": "Delicate, shell-shaped French sponge cake with crisp golden edges, and a tender buttery crumb. \nFlavors: Plain (brown butter) | Lemon glaze | Chocolate ",
+      "name": "Fraisier",
+      "desc": "Traditional French strawberry cake featuring layers of vanilla sponge, silky mousseline cream, and fresh strawberries. Finished with a strawberry glaze. ",
       "allergens": [
         "Gluten",
         "Milk",
         "Eggs",
         "Nuts"
       ],
-      "photo": "Madeline.jpg",
-      "unit": "18",
-      "price": "€25"
+      "photo": "fraisier.jpg",
+      "options": [
+        {
+          "size": "20 cm · serves 10–12",
+          "price": "€55"
+        },
+        {
+          "size": "16 cm · serves 6–8",
+          "price": "€42"
+        }
+      ]
+    },
+    {
+      "name": "Madeline",
+      "unit": "Box of 18",
+      "price": "€27",
+      "desc": "Delicate, shell-shaped French sponge cake with crips golden edges, and a tender buttery crumb. \nFlavors: Plain browned butter | Lemon glaze | Chocolate Hazelnut",
+      "allergens": [
+        "Gluten",
+        "Eggs",
+        "Milk",
+        "Nuts"
+      ],
+      "photo": "madeline.jpg"
     }
   ],
-  "special": null
+  "special": null,
+  "text": {
+    "brand": "Luna",
+    "heroLabel": "Small-batch bakes · Amsterdam",
+    "tagline": "Artisanal small batches made to order.",
+    "menuLink": "View the menu",
+    "menuLabel": "The menu",
+    "menuHeading": "What I bake",
+    "allergenLabel": "Contains",
+    "orderLabel": "How to order",
+    "orderHeading": "Simple and personal",
+    "steps": [
+      {
+        "title": "Send a message",
+        "text": "Tell me what you'd like and when you'd like to collect it, by WhatsApp or email."
+      },
+      {
+        "title": "Confirmation",
+        "text": "I'll reply to confirm availability, the total and a pickup time."
+      },
+      {
+        "title": "Collect your bakes",
+        "text": "Pick up from me, or ask for delivery."
+      }
+    ],
+    "contactLabel": "Order",
+    "contactHeading": "Get in touch",
+    "contactIntro": "The quickest way to order is a message. The button below opens WhatsApp with a ready-made note.",
+    "whatsappButton": "Order on WhatsApp",
+    "emailPrompt": "Prefer email?",
+    "footerNote": "Everything is baked in a home kitchen where gluten, milk, eggs, nuts and soy are handled. Please tell me about any allergies when you order.",
+    "footerLine": "Luna · Made at home",
+    "pageTitle": "Luna — Small-batch bakes",
+    "pageDescription": "Luna: small-batch bakes made at home in Amsterdam. See the menu and order by WhatsApp or email."
+  }
 };
