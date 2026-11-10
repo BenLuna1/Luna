@@ -132,6 +132,21 @@
   }
   .item .photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
   .item .photo span { font-size: 12px; letter-spacing: 0.28em; text-transform: uppercase; color: var(--heading); opacity: 0.7; }
+  /* Several photos: swipe sideways (snap), dots below, arrows on desktop hover */
+  .item .photo .track { position: absolute; inset: 0; display: flex; overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x mandatory; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+  .item .photo .track::-webkit-scrollbar { display: none; }
+  .item .photo .track img { flex: 0 0 100%; scroll-snap-align: start; scroll-snap-stop: always; }
+  .item .photo .dots { position: absolute; left: 0; right: 0; bottom: 6px; display: flex; justify-content: center; z-index: 2; }
+  .item .photo .dot { width: 20px; height: 20px; padding: 0; border: 0; background: none; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+  .item .photo .dot::before { content: ""; width: 6px; height: 6px; border-radius: 50%; border: 1px solid rgba(245,239,235,.9); box-shadow: 0 0 3px rgba(47,65,86,.55); transition: background .2s; }
+  .item .photo .dot.on::before { background: #F5EFEB; }
+  .item .photo .nav { position: absolute; top: 50%; transform: translateY(-50%); width: 34px; height: 46px; padding: 0 0 4px; border: 0; background: rgba(47,65,86,.3); color: #F5EFEB; font: 300 26px/1 var(--sans); cursor: pointer; display: none; z-index: 2; }
+  .item .photo .prev { left: 0; } .item .photo .next { right: 0; }
+  @media (hover: hover) and (pointer: fine) {
+    .item .photo.multi:hover .nav { display: block; }
+    .item .photo.at-start .prev, .item .photo.at-end .next { display: none !important; }
+  }
+  .item .photo .stamp { z-index: 3; }
   .item-top {
     display: flex;
     justify-content: space-between;
@@ -213,7 +228,8 @@
     gap: 48px 40px;
     margin-bottom: 70px;
   }
-  .step .num { font-family: var(--serif); font-size: 56px; color: var(--heading); line-height: 1; }
+  .step .ico { width: 46px; height: 46px; color: var(--heading); display: block; }
+  .step .ico svg { width: 100%; height: 100%; fill: none; stroke: currentColor; stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round; }
   .step h3 { font-size: 24px; margin: 14px 0 8px; }
   .facts { border-top: 1px solid var(--rule); }
   .facts div {
@@ -277,7 +293,6 @@
     <div class="wrap">
       <div class="section-head">
         <span class="label" data-t="menuLabel">The menu</span>
-        <h2 data-t="menuHeading">What I bake</h2>
       </div>
       <div class="menu-grid" id="menu-grid"></div>
       <div class="special" id="special"></div>
@@ -288,7 +303,6 @@
     <div class="wrap">
       <div class="section-head">
         <span class="label" data-t="orderLabel">How to order</span>
-        <h2 data-t="orderHeading">Simple and personal</h2>
       </div>
       <div class="steps" id="steps"></div>
       <dl class="facts" id="facts"></dl>
@@ -319,19 +333,28 @@
 <script>
 (function () {
   const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-const DEFAULT_TEXT = {
+const ICONS = {
+    chat: '<path d="M8 12h32a2 2 0 0 1 2 2v18a2 2 0 0 1-2 2H22l-9 7v-7H8a2 2 0 0 1-2-2V14a2 2 0 0 1 2-2z"/><path d="M14 21h20M14 27h12"/>',
+    calendar: '<rect x="7" y="11" width="34" height="30" rx="2"/><path d="M7 19h34M16 7v8M32 7v8M17 30l5 5 9-10"/>',
+    bag: '<path d="M10 16h28l-2 25H12z"/><path d="M18 16v-3a6 6 0 0 1 12 0v3"/>',
+    delivery: '<path d="M5 13h22v20H5zM27 21h9l7 7v5H27z"/><circle cx="14" cy="36" r="3.5"/><circle cx="35" cy="36" r="3.5"/>',
+    payment: '<rect x="6" y="12" width="36" height="25" rx="2"/><path d="M6 20h36M12 30h9"/>',
+    clock: '<circle cx="24" cy="24" r="17"/><path d="M24 13v11l7 4"/>',
+    heart: '<path d="M24 40S8 30 8 19a8 8 0 0 1 16-3 8 8 0 0 1 16 3c0 11-16 21-16 21z"/>',
+    cake: '<path d="M9 28h30v12H9z"/><path d="M9 28c3 4 6 4 8 0s6 4 8 0 6 4 8 0 3 2 6 0"/><path d="M24 28v-8M24 13c2 2 2 5 0 7-2-2-2-5 0-7z"/>'
+  };
+  const ICON_KEYS = Object.keys(ICONS), DEFAULT_ICONS = ["chat", "payment", "bag"];
+  const DEFAULT_TEXT = {
     brand: "Luna",
     heroSub: "Amsterdam",
     menuLink: "View the menu",
     menuLabel: "The menu",
-    menuHeading: "What I bake",
     allergenLabel: "Contains",
     orderLabel: "How to order",
-    orderHeading: "Simple and personal",
     steps: [
-      { title: "Send a message", text: "Tell me what you'd like and when you'd like to collect it, by WhatsApp or email." },
-      { title: "I confirm", text: "I'll reply to confirm availability, the total and a pickup time." },
-      { title: "Collect your bakes", text: "Pick up from me, or ask for delivery." }
+      { icon: "chat", title: "Send a message", text: "Tell me what you'd like and when you'd like to collect it, by WhatsApp or email." },
+      { icon: "payment", title: "Confirmation and payment", text: "I'll reply to confirm availability, the total and a pickup time. Payment details are shared with your confirmation." },
+      { icon: "bag", title: "Collect your bakes", text: "Pick up from me, or ask for delivery." }
     ],
     contactLabel: "Order",
     contactHeading: "Get in touch",
@@ -348,7 +371,7 @@ const DEFAULT_TEXT = {
     const out = JSON.parse(JSON.stringify(DEFAULT_TEXT));
     Object.keys(DEFAULT_TEXT).forEach(k => {
       if (k === "steps") {
-        if (Array.isArray(t.steps) && t.steps.length) out.steps = t.steps.map(s => ({ title: String(s.title ?? ""), text: String(s.text ?? "") }));
+        if (Array.isArray(t.steps) && t.steps.length) out.steps = t.steps.map((s, n) => ({ icon: ICON_KEYS.includes(s.icon) ? s.icon : (DEFAULT_ICONS[n] || "heart"), title: String(s.title ?? ""), text: String(s.text ?? "") }));
       } else if (typeof t[k] === "string" && t[k].trim()) out[k] = t[k];
     });
     return out;
@@ -364,11 +387,45 @@ const DEFAULT_TEXT = {
     allergenLabel = T.allergenLabel;
     document.querySelectorAll("[data-t]").forEach(el => { el.textContent = T[el.dataset.t]; });
     document.getElementById("steps").innerHTML = T.steps.map((st, i) =>
-      `<div class="step"><div class="num">${i + 1}</div><h3>${esc(st.title)}</h3><p>${esc(st.text)}</p></div>`).join("");
+      `<div class="step"><span class="ico" aria-hidden="true"><svg viewBox="0 0 48 48">${ICONS[st.icon] || ICONS.heart}</svg></span><h3>${esc(st.title)}</h3><p>${esc(st.text)}</p></div>`).join("");
     document.title = T.pageTitle;
     const md = document.querySelector('meta[name="description"]');
     if (md) md.setAttribute("content", T.pageDescription);
   }
+
+  function photoBlock(i, un) {
+    const list = (Array.isArray(i.photos) ? i.photos : (i.photo ? [i.photo] : [])).map(p => String(p || "").trim()).filter(Boolean);
+    const stamp = un ? `<span class="stamp">${esc(stampText(i))}</span>` : "";
+    if (list.length < 2) {
+      return `<div class="photo">${list.length ? `<img src="${esc(list[0])}" alt="${esc(i.name)}" loading="lazy">` : `<span>Photo</span>`}${stamp}</div>`;
+    }
+    return `<div class="photo multi at-start">
+      <div class="track">${list.map((p, n) => `<img src="${esc(p)}" alt="${esc(i.name)} (photo ${n + 1} of ${list.length})" loading="lazy">`).join("")}</div>
+      <button type="button" class="nav prev" aria-label="Previous photo">&lsaquo;</button><button type="button" class="nav next" aria-label="Next photo">&rsaquo;</button>
+      <div class="dots">${list.map((_, n) => `<button type="button" class="dot${n ? "" : " on"}" data-n="${n}" aria-label="Photo ${n + 1}"></button>`).join("")}</div>${stamp}</div>`;
+  }
+  const photoIdx = tr => Math.round(tr.scrollLeft / (tr.clientWidth || 1));
+  function photoSync(ph) {
+    const tr = ph.querySelector(".track"); if (!tr) return;
+    const n = tr.children.length, k = Math.min(n - 1, Math.max(0, photoIdx(tr)));
+    ph.querySelectorAll(".dot").forEach((d, j) => d.classList.toggle("on", j === k));
+    ph.classList.toggle("at-start", k === 0); ph.classList.toggle("at-end", k === n - 1);
+  }
+  (function () {
+    const grid = document.getElementById("menu-grid");
+    grid.addEventListener("scroll", e => { const t = e.target; if (t.classList && t.classList.contains("track")) photoSync(t.parentElement); }, true);
+    grid.addEventListener("click", e => {
+      const b = e.target.closest("button"), ph = b && b.closest(".photo"), tr = ph && ph.querySelector(".track");
+      if (!tr) return;
+      let k;
+      if (b.classList.contains("dot")) k = +b.dataset.n;
+      else if (b.classList.contains("prev")) k = photoIdx(tr) - 1;
+      else if (b.classList.contains("next")) k = photoIdx(tr) + 1;
+      else return;
+      k = Math.max(0, Math.min(tr.children.length - 1, k));
+      tr.scrollTo({ left: k * tr.clientWidth, behavior: "smooth" });
+    });
+  })();
 
   function render(L) {
     applyText(L.text);
@@ -378,7 +435,7 @@ const DEFAULT_TEXT = {
       const un = !!i.unavailable;
       return `
       <article class="item${un ? " unavailable" : ""}">
-        <div class="photo">${i.photo ? `<img src="${esc(i.photo)}" alt="${esc(i.name)}" loading="lazy">` : `<span>Photo</span>`}${un ? `<span class="stamp">${esc(stampText(i))}</span>` : ""}</div>
+        ${photoBlock(i, un)}
         <div class="item-top">
           <h3>${esc(i.name)}</h3>
           ${multi ? "" : `<div><span class="price">${esc(i.price)}</span><span class="unit">${esc(i.unit)}</span></div>`}

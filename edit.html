@@ -24,6 +24,7 @@
   .card-head strong { font-size:13px; letter-spacing:.14em; text-transform:uppercase; }
   .f { display:block; margin-bottom:10px; }
   .f > span { display:block; font-size:12px; letter-spacing:.08em; text-transform:uppercase; margin-bottom:4px; opacity:.8; }
+  select { width:100%; padding:9px 10px; border:1px solid #bdb8b0; border-radius:4px; font:inherit; color:inherit; background:#fff; }
   input[type=text], textarea { width:100%; padding:9px 10px; border:1px solid #bdb8b0; border-radius:4px; font:inherit; color:inherit; background:#fff; }
   input[type=text]:focus, textarea:focus { outline:2px solid var(--teal); border-color:var(--teal); }
   textarea { min-height:64px; resize:vertical; }
@@ -84,19 +85,19 @@
 <script>
 (function () {
   const ALLERGENS = ["Gluten","Crustaceans","Eggs","Fish","Peanuts","Soy","Milk","Nuts","Celery","Mustard","Sesame","Sulphites","Lupin","Molluscs"];
+  const ICON_LABELS = { chat: "Message", calendar: "Calendar (confirm)", bag: "Bag (pick up)", delivery: "Delivery", payment: "Payment", clock: "Clock", heart: "Heart", cake: "Cake" };
+  const ICON_KEYS = Object.keys(ICON_LABELS), DEFAULT_ICONS = ["chat", "payment", "bag"];
   const DEFAULT_TEXT = {
     brand: "Luna",
     heroSub: "Amsterdam",
     menuLink: "View the menu",
     menuLabel: "The menu",
-    menuHeading: "What I bake",
     allergenLabel: "Contains",
     orderLabel: "How to order",
-    orderHeading: "Simple and personal",
     steps: [
-      { title: "Send a message", text: "Tell me what you'd like and when you'd like to collect it, by WhatsApp or email." },
-      { title: "I confirm", text: "I'll reply to confirm availability, the total and a pickup time." },
-      { title: "Collect your bakes", text: "Pick up from me, or ask for delivery." }
+      { icon: "chat", title: "Send a message", text: "Tell me what you'd like and when you'd like to collect it, by WhatsApp or email." },
+      { icon: "payment", title: "Confirmation and payment", text: "I'll reply to confirm availability, the total and a pickup time. Payment details are shared with your confirmation." },
+      { icon: "bag", title: "Collect your bakes", text: "Pick up from me, or ask for delivery." }
     ],
     contactLabel: "Order",
     contactHeading: "Get in touch",
@@ -113,13 +114,15 @@
     const out = JSON.parse(JSON.stringify(DEFAULT_TEXT));
     Object.keys(DEFAULT_TEXT).forEach(k => {
       if (k === "steps") {
-        if (Array.isArray(t.steps) && t.steps.length) out.steps = t.steps.map(s => ({ title: String(s.title ?? ""), text: String(s.text ?? "") }));
+        if (Array.isArray(t.steps) && t.steps.length) out.steps = t.steps.map((s, n) => ({ icon: ICON_KEYS.includes(s.icon) ? s.icon : (DEFAULT_ICONS[n] || "heart"), title: String(s.title ?? ""), text: String(s.text ?? "") }));
       } else if (typeof t[k] === "string" && t[k].trim()) out[k] = t[k];
     });
     return out;
   }
+  const normPhotos = it => { if (!it) return; it.photos = (Array.isArray(it.photos) ? it.photos : (it.photo ? [it.photo] : [])).map(x => String(x ?? "")); delete it.photo; };
   const D = JSON.parse(JSON.stringify(LUNA));
   D.text = mergeText(LUNA.text);
+  D.menu.forEach(normPhotos);
   let lastSpecial = null, dirty = false, textOpen = false;
 
   // ---- Draft autosave (this browser only) ----
@@ -155,15 +158,14 @@
         ${field("Link below it", "text.menuLink", t.menuLink)}
         <div class="grp">Menu section</div>
         ${field("Small label", "text.menuLabel", t.menuLabel)}
-        ${field("Heading", "text.menuHeading", t.menuHeading)}
         ${field("Allergen label (before the list)", "text.allergenLabel", t.allergenLabel)}
         <div class="grp">How-to-order section</div>
         ${field("Small label", "text.orderLabel", t.orderLabel)}
-        ${field("Heading", "text.orderHeading", t.orderHeading)}
         ${t.steps.map((s, i) => `
           <div class="card sub">
             <div class="card-head"><strong>Step ${i + 1}</strong>
               <button class="small danger" data-act="del-step" data-i="${i}" ${t.steps.length < 2 ? "disabled" : ""}>Remove</button></div>
+            <label class="f"><span>Icon</span><select data-p="text.steps.${i}.icon">${ICON_KEYS.map(k => `<option value="${k}" ${s.icon === k ? "selected" : ""}>${ICON_LABELS[k]}</option>`).join("")}</select></label>
             ${field("Title", `text.steps.${i}.title`, s.title)}
             ${area("Text", `text.steps.${i}.text`, s.text)}
           </div>`).join("")}
@@ -207,7 +209,15 @@
         ${field("Stamp text (default: Unavailable)", `${base}.stampText`, it.stampText, 'placeholder="Unavailable"')}
       </div>
       <label class="f"><span>Description</span><textarea data-p="${base}.desc">${esc(it.desc)}</textarea></label>
-      ${kind === "item" ? field("Photo file name (optional, e.g. tiramisu.jpg)", `${base}.photo`, it.photo) : ""}
+      ${kind === "item" ? `<div class="f"><span>Photos (optional; first one shows first, visitors swipe for the rest)</span>
+        ${(it.photos || []).map((p, j, arr) => `
+          <div class="row" style="margin-bottom:6px">
+            <input type="text" data-p="${base}.photos.${j}" value="${esc(p)}" placeholder="e.g. tiramisu.jpg">
+            <div class="x"><button class="small" data-act="up-photo" data-base="${base}" data-j="${j}" ${j === 0 ? "disabled" : ""} title="Move earlier">↑</button>
+              <button class="small" data-act="down-photo" data-base="${base}" data-j="${j}" ${j === arr.length - 1 ? "disabled" : ""} title="Move later">↓</button>
+              <button class="small danger" data-act="del-photo" data-base="${base}" data-j="${j}" title="Remove photo">✕</button></div>
+          </div>`).join("")}
+        <button class="add small" data-act="add-photo" data-base="${base}">+ Add a photo</button></div>` : ""}
       <div class="mode">
         <label><input type="radio" name="mode-${base}" data-act="mode" data-base="${base}" value="single" ${multi ? "" : "checked"}> One price</label>
         <label><input type="radio" name="mode-${base}" data-act="mode" data-base="${base}" value="sizes" ${multi ? "checked" : ""}> Several sizes</label>
@@ -265,6 +275,7 @@
     out.menu.forEach(fix); fix(out.special);
     const clean = it => { if (!it) return; if (!it.unavailable) delete it.unavailable; if (!(it.stampText || "").trim()) delete it.stampText; };
     out.menu.forEach(clean); clean(out.special);
+    out.menu.forEach(it => { normPhotos(it); it.photos = it.photos.map(x => x.trim()).filter(Boolean); if (!it.photos.length) delete it.photos; });
     return "/* Luna menu data. Generated by edit.html. You can also edit it by hand. */\n\nconst LUNA = " + JSON.stringify(out, null, 2) + ";\n";
   }
 
@@ -321,12 +332,15 @@
     const b = e.target.closest("button[data-act]");
     if (!b) return;
     const a = b.dataset.act, i = +b.dataset.i;
-    if (a === "add-item") D.menu.push({ name: "New item", desc: "", unit: "each", price: "", allergens: [], photo: "" });
+    if (a === "add-item") D.menu.push({ name: "New item", desc: "", unit: "each", price: "", allergens: [], photos: [] });
     else if (a === "del-item") { if (!confirm("Remove this item?")) return; D.menu.splice(i, 1); }
     else if (a === "up" || a === "down") { const j = a === "up" ? i - 1 : i + 1; [D.menu[i], D.menu[j]] = [D.menu[j], D.menu[i]]; }
     else if (a === "add-size") { const it = get(b.dataset.base); it.options.push({ size: "", price: "" }); }
     else if (a === "del-size") { get(b.dataset.base).options.splice(+b.dataset.j, 1); }
-    else if (a === "add-step") D.text.steps.push({ title: "", text: "" });
+    else if (a === "add-photo") { const it = get(b.dataset.base); (it.photos || (it.photos = [])).push(""); }
+    else if (a === "del-photo") get(b.dataset.base).photos.splice(+b.dataset.j, 1);
+    else if (a === "up-photo" || a === "down-photo") { const l = get(b.dataset.base).photos, j = +b.dataset.j, k = a === "up-photo" ? j - 1 : j + 1; [l[j], l[k]] = [l[k], l[j]]; }
+    else if (a === "add-step") D.text.steps.push({ icon: "heart", title: "", text: "" });
     else if (a === "del-step") D.text.steps.splice(i, 1);
     else if (a === "add-info") D.orderInfo.push(["", ""]);
     else if (a === "del-info") D.orderInfo.splice(i, 1);
@@ -355,7 +369,7 @@
   const draft = store.get();
   if (validDraft(draft)) {
     const d = JSON.parse(JSON.stringify(draft.data));
-    d.text = mergeText(d.text);
+    d.text = mergeText(d.text); d.menu.forEach(normPhotos);
     if (code(d) === baseline) store.del();               // already published: nothing to restore
     else {
       const when = new Date(draft.savedAt || Date.now()).toLocaleString();
