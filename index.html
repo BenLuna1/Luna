@@ -125,7 +125,7 @@
   .item-top > div { flex-shrink: 0; }
   .item p.desc { margin-bottom: 14px; }
 
-  /* "Sold out" stamp */
+  /* "Unavailable" stamp */
   .stamp {
     position: absolute;
     top: 50%; left: 50%;
@@ -333,7 +333,7 @@ const DEFAULT_TEXT = {
     });
     return out;
   }
-  const stampText = x => (x.stampText || "").trim() || "Sold out";
+  const stampText = x => (x.stampText || "").trim() || "Unavailable";
   let allergenLabel = DEFAULT_TEXT.allergenLabel;
   const allergenLine = a => `<p class="allergens"><b>${esc(allergenLabel)}</b>${(a || []).map(esc).join(", ")}</p>`;
   const sizesList = o => `<ul class="sizes">${o.map(x =>

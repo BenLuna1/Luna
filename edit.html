@@ -46,6 +46,11 @@
   .savebar button.sec { background:transparent; color:var(--beige); font-weight:400; }
   .status { font-size:12px; letter-spacing:.1em; text-transform:uppercase; }
   .status.dirty { color:#F2C879; }
+  #banner { background:#F2E3B8; color:var(--navy); padding:12px 20px; display:flex; gap:14px; align-items:center; flex-wrap:wrap; border-bottom:1px solid #d8c78f; }
+  #banner[hidden] { display:none; }
+  .app.locked .form { opacity:.45; pointer-events:none; user-select:none; }
+  #banner span { flex:1; min-width:240px; }
+  #banner button { font-weight:600; }
   details.card > summary { cursor:pointer; font-weight:600; letter-spacing:.04em; }
   .grp { font-size:12px; letter-spacing:.16em; text-transform:uppercase; margin:20px 0 8px; padding-top:12px; border-top:1px solid var(--line); }
   .grp:first-of-type { border-top:0; padding-top:0; }
@@ -61,6 +66,8 @@
 <body>
 
 <div class="top"><b>Luna · Menu editor</b><span id="status" class="status">No changes yet</span></div>
+
+<div id="banner" hidden></div>
 
 <div class="app">
   <div class="form" id="form"></div>
@@ -115,6 +122,16 @@
   const D = JSON.parse(JSON.stringify(LUNA));
   D.text = mergeText(LUNA.text);
   let lastSpecial = null, dirty = false, textOpen = false;
+
+  // ---- Draft autosave (this browser only) ----
+  const KEY = "luna-menu-editor-draft:" + location.pathname;
+  let draftOK = true, pending = false;
+  const store = {
+    get() { try { return JSON.parse(localStorage.getItem(KEY)); } catch (_) { return null; } },
+    set(v) { try { localStorage.setItem(KEY, JSON.stringify(v)); draftOK = true; } catch (_) { draftOK = false; } },
+    del() { try { localStorage.removeItem(KEY); } catch (_) {} }
+  };
+  const validDraft = d => d && d.data && Array.isArray(d.data.menu) && Array.isArray(d.data.orderInfo) && d.data.contact && typeof d.data.contact === "object";
 
   const $ = id => document.getElementById(id);
   const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -189,7 +206,7 @@
       ${field("Name", `${base}.name`, it.name)}
       <div class="row" style="align-items:center">
         <label class="f" style="display:flex;gap:8px;align-items:center;cursor:pointer;margin:0"><input type="checkbox" data-un="${base}" ${it.unavailable ? "checked" : ""}> Mark as unavailable</label>
-        ${field("Stamp text (default: Sold out)", `${base}.stampText`, it.stampText, 'placeholder="Sold out"')}
+        ${field("Stamp text (default: Unavailable)", `${base}.stampText`, it.stampText, 'placeholder="Unavailable"')}
       </div>
       <label class="f"><span>Description</span><textarea data-p="${base}.desc">${esc(it.desc)}</textarea></label>
       ${kind === "item" ? field("Photo file name (optional, e.g. tiramisu.jpg)", `${base}.photo`, it.photo) : ""}
@@ -243,8 +260,8 @@
     preview();
   }
 
-  function code() {
-    const out = JSON.parse(JSON.stringify(D));
+  function code(src = D) {
+    const out = JSON.parse(JSON.stringify(src));
     out.contact.whatsapp = String(out.contact.whatsapp).replace(/\D/g, "");
     const fix = it => { if (!it) return; if (Array.isArray(it.options)) { delete it.price; delete it.unit; } else { delete it.options; } };
     out.menu.forEach(fix); fix(out.special);
@@ -260,7 +277,10 @@
   }
   function touch() {
     dirty = true;
-    $("status").textContent = "Unsaved changes: copy menu.js when done";
+    if (!pending) store.set({ savedAt: Date.now(), data: D });   // never overwrite an unanswered draft
+    $("status").textContent = draftOK
+      ? "Unsaved changes · draft kept in this browser · copy menu.js when done"
+      : "Unsaved changes: copy menu.js when done (draft can't be kept in this browser)";
     $("status").className = "status dirty";
     preview();
   }
@@ -331,6 +351,32 @@
   });
 
   window.addEventListener("beforeunload", e => { if (dirty) { e.preventDefault(); e.returnValue = ""; } });
+
+  // Offer to restore an earlier draft that differs from the current menu.js
+  const baseline = code();
+  const draft = store.get();
+  if (validDraft(draft)) {
+    const d = JSON.parse(JSON.stringify(draft.data));
+    d.text = mergeText(d.text);
+    if (code(d) === baseline) store.del();               // already published: nothing to restore
+    else {
+      const when = new Date(draft.savedAt || Date.now()).toLocaleString();
+      const bn = $("banner");
+      bn.innerHTML = `<span><b>You have unsaved edits</b> from ${esc(when)} that are not in your current menu.js.</span>
+        <button id="restore">Restore my edits</button><button id="discard">Discard them</button>`;
+      bn.hidden = false; pending = true; document.querySelector(".app").classList.add("locked");
+      const unlock = () => { pending = false; bn.hidden = true; document.querySelector(".app").classList.remove("locked"); };
+      $("restore").addEventListener("click", () => {
+        Object.keys(D).forEach(k => delete D[k]);
+        Object.assign(D, d);
+        unlock(); build(); touch();
+      });
+      $("discard").addEventListener("click", () => {
+        if (!confirm("Discard your unsaved edits for good?")) return;
+        store.del(); unlock();
+      });
+    }
+  } else if (draft) store.del();                          // unreadable draft
 
   build();
 })();
