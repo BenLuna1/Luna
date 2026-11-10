@@ -213,18 +213,18 @@
 <body>
 
 <header>
-  <span class="label">Small-batch bakes &middot; Amsterdam</span>
-  <h1>Luna</h1>
-  <p class="tagline">Baked at home, in small batches, and made to order.</p>
-  <a class="scroll-link label" href="#menu">View the menu</a>
+  <span class="label" data-t="heroLabel">Small-batch bakes &middot; Amsterdam</span>
+  <h1 data-t="brand">Luna</h1>
+  <p class="tagline" data-t="tagline">Baked at home, in small batches, and made to order.</p>
+  <a class="scroll-link label" href="#menu" data-t="menuLink">View the menu</a>
 </header>
 
 <main>
   <section id="menu">
     <div class="wrap">
       <div class="section-head">
-        <span class="label">The menu</span>
-        <h2>What I bake</h2>
+        <span class="label" data-t="menuLabel">The menu</span>
+        <h2 data-t="menuHeading">What I bake</h2>
       </div>
       <div class="menu-grid" id="menu-grid"></div>
       <div class="special" id="special"></div>
@@ -234,14 +234,10 @@
   <section id="order">
     <div class="wrap">
       <div class="section-head">
-        <span class="label">How to order</span>
-        <h2>Simple and personal</h2>
+        <span class="label" data-t="orderLabel">How to order</span>
+        <h2 data-t="orderHeading">Simple and personal</h2>
       </div>
-      <div class="steps">
-        <div class="step"><div class="num">1</div><h3>Send a message</h3><p>Tell me what you'd like and when you'd like to collect it, by WhatsApp or email.</p></div>
-        <div class="step"><div class="num">2</div><h3>I confirm</h3><p>I'll reply to confirm availability, the total and a pickup time.</p></div>
-        <div class="step"><div class="num">3</div><h3>Collect your bakes</h3><p>Pick up from me, or ask for delivery.</p></div>
-      </div>
+      <div class="steps" id="steps"></div>
       <dl class="facts" id="facts"></dl>
     </div>
   </section>
@@ -249,20 +245,20 @@
   <section class="contact" id="contact" style="border-bottom:0">
     <div class="wrap">
       <div class="section-head">
-        <span class="label">Order</span>
-        <h2>Get in touch</h2>
+        <span class="label" data-t="contactLabel">Order</span>
+        <h2 data-t="contactHeading">Get in touch</h2>
       </div>
-      <p class="lead">The quickest way to order is a message. The button below opens WhatsApp with a ready-made note.</p>
-      <a class="btn" id="wa-btn" href="#">Order on WhatsApp</a>
-      <p class="alt">Prefer email? <a id="mail-link" href="#"></a></p>
+      <p class="lead" data-t="contactIntro">The quickest way to order is a message. The button below opens WhatsApp with a ready-made note.</p>
+      <a class="btn" id="wa-btn" href="#" data-t="whatsappButton">Order on WhatsApp</a>
+      <p class="alt"><span data-t="emailPrompt">Prefer email?</span> <a id="mail-link" href="#"></a></p>
     </div>
   </section>
 </main>
 
 <footer>
   <div class="wrap">
-    <p>Everything is baked in a home kitchen where gluten, milk, eggs, nuts and soy are handled. Please tell me about any allergies when you order.</p>
-    <span class="label">Luna &middot; Made at home</span>
+    <p data-t="footerNote">Everything is baked in a home kitchen where gluten, milk, eggs, nuts and soy are handled. Please tell me about any allergies when you order.</p>
+    <span class="label" data-t="footerLine">Luna &middot; Made at home</span>
   </div>
 </footer>
 
@@ -270,11 +266,59 @@
 <script>
 (function () {
   const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-  const allergenLine = a => `<p class="allergens"><b>Contains</b>${(a || []).map(esc).join(", ")}</p>`;
+const DEFAULT_TEXT = {
+    brand: "Luna",
+    heroLabel: "Small-batch bakes · Amsterdam",
+    tagline: "Baked at home, in small batches, and made to order.",
+    menuLink: "View the menu",
+    menuLabel: "The menu",
+    menuHeading: "What I bake",
+    allergenLabel: "Contains",
+    orderLabel: "How to order",
+    orderHeading: "Simple and personal",
+    steps: [
+      { title: "Send a message", text: "Tell me what you'd like and when you'd like to collect it, by WhatsApp or email." },
+      { title: "I confirm", text: "I'll reply to confirm availability, the total and a pickup time." },
+      { title: "Collect your bakes", text: "Pick up from me, or ask for delivery." }
+    ],
+    contactLabel: "Order",
+    contactHeading: "Get in touch",
+    contactIntro: "The quickest way to order is a message. The button below opens WhatsApp with a ready-made note.",
+    whatsappButton: "Order on WhatsApp",
+    emailPrompt: "Prefer email?",
+    footerNote: "Everything is baked in a home kitchen where gluten, milk, eggs, nuts and soy are handled. Please tell me about any allergies when you order.",
+    footerLine: "Luna · Made at home",
+    pageTitle: "Luna — Small-batch bakes",
+    pageDescription: "Luna: small-batch bakes made at home in Amsterdam. See the menu and order by WhatsApp or email."
+  };
+  function mergeText(t) {
+    t = t || {};
+    const out = JSON.parse(JSON.stringify(DEFAULT_TEXT));
+    Object.keys(DEFAULT_TEXT).forEach(k => {
+      if (k === "steps") {
+        if (Array.isArray(t.steps) && t.steps.length) out.steps = t.steps.map(s => ({ title: String(s.title ?? ""), text: String(s.text ?? "") }));
+      } else if (typeof t[k] === "string" && t[k].trim()) out[k] = t[k];
+    });
+    return out;
+  }
+  let allergenLabel = DEFAULT_TEXT.allergenLabel;
+  const allergenLine = a => `<p class="allergens"><b>${esc(allergenLabel)}</b>${(a || []).map(esc).join(", ")}</p>`;
   const sizesList = o => `<ul class="sizes">${o.map(x =>
     `<li><span class="size">${esc(x.size)}</span><span class="price">${esc(x.price)}</span></li>`).join("")}</ul>`;
 
+  function applyText(t) {
+    const T = mergeText(t);
+    allergenLabel = T.allergenLabel;
+    document.querySelectorAll("[data-t]").forEach(el => { el.textContent = T[el.dataset.t]; });
+    document.getElementById("steps").innerHTML = T.steps.map((st, i) =>
+      `<div class="step"><div class="num">${i + 1}</div><h3>${esc(st.title)}</h3><p>${esc(st.text)}</p></div>`).join("");
+    document.title = T.pageTitle;
+    const md = document.querySelector('meta[name="description"]');
+    if (md) md.setAttribute("content", T.pageDescription);
+  }
+
   function render(L) {
+    applyText(L.text);
     // Menu
     document.getElementById("menu-grid").innerHTML = L.menu.map(i => {
       const multi = Array.isArray(i.options) && i.options.length;
@@ -319,6 +363,19 @@
   }
 
   render(LUNA);
+
+  // Always open at the top: no browser scroll restoration, and no #hash left in the address
+  if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+  if (location.hash) history.replaceState(null, "", location.pathname + location.search);
+  window.scrollTo(0, 0);
+  window.addEventListener("load", () => window.scrollTo(0, 0));
+
+  // "View the menu" scrolls smoothly without adding #menu to the address
+  const toMenu = document.querySelector('a.scroll-link[href="#menu"]');
+  if (toMenu) toMenu.addEventListener("click", e => {
+    e.preventDefault();
+    document.getElementById("menu").scrollIntoView({ behavior: "smooth" });
+  });
 
   // Live preview from edit.html (display only; it never changes any saved file)
   window.addEventListener("message", e => {
