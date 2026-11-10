@@ -51,7 +51,9 @@ const LUNA = {
         "Milk",
         "Eggs"
       ],
-      "photo": "tiramisu.jpg"
+      "photos": [
+        "tiramisu.jpg"
+      ]
     },
     {
       "name": "Fraisier",
@@ -62,7 +64,6 @@ const LUNA = {
         "Milk",
         "Nuts"
       ],
-      "photo": "fraisier.jpg",
       "options": [
         {
           "size": "20 cm · serves 10–12",
@@ -72,6 +73,9 @@ const LUNA = {
           "size": "16 cm · serves 6–8",
           "price": "€42"
         }
+      ],
+      "photos": [
+        "fraisier.jpg"
       ]
     },
     {
@@ -85,30 +89,46 @@ const LUNA = {
         "Milk",
         "Nuts"
       ],
-      "photo": "madeline.jpg"
+      "photos": [
+        "madeline.jpg"
+      ]
+    },
+    {
+      "name": "Chocolate Marbled Loaf",
+      "desc": "A classic French-inspired marble loaf with a tender, golden crumb, deep-chocolate ribbons. Finished with a chocolate ganache topping. ",
+      "unit": "each",
+      "price": "€22",
+      "allergens": [
+        "Gluten",
+        "Eggs",
+        "Milk"
+      ],
+      "photos": [
+        "loaf.jpg"
+      ]
     }
   ],
   "special": null,
   "text": {
     "brand": "Luna",
-    "heroLabel": "Small-batch bakes · Amsterdam",
-    "tagline": "Baked at home, in small batches, and made to order.",
+    "heroSub": "Amsterdam",
     "menuLink": "View the menu",
     "menuLabel": "The menu",
-    "menuHeading": "What I bake",
     "allergenLabel": "Contains",
     "orderLabel": "How to order",
-    "orderHeading": "-",
     "steps": [
       {
+        "icon": "chat",
         "title": "Send a message",
         "text": "Tell me what you'd like and when you'd like to collect it, by WhatsApp or email."
       },
       {
+        "icon": "payment",
         "title": "Payment and Confirmation",
         "text": "I'll reply to confirm availability, the total and a pickup time. Followed by a payment link. "
       },
       {
+        "icon": "bag",
         "title": "Collect your bakes",
         "text": "Pick up from me, or ask for delivery."
       }
