@@ -2,9 +2,9 @@
 
 const LUNA = {
   "contact": {
-    "whatsapp": "31600000000",
-    "email": "hello@example.com",
-    "whatsappMessage": "Hi Luna, I'd like to order: example: 2x 20cm Tiramisu. Pick-up on November 22nd at 11:00. "
+    "whatsapp": "31615949860",
+    "email": "luna.bakes.ams@gmail.com",
+    "whatsappMessage": "Hi Luna, I'd like to order: "
   },
   "orderInfo": [
     [
@@ -13,7 +13,7 @@ const LUNA = {
     ],
     [
       "Minimum order",
-      "€15"
+      "€25"
     ],
     [
       "Pickup",
@@ -31,18 +31,18 @@ const LUNA = {
   "menu": [
     {
       "name": "Tiramisu",
-      "desc": "Mascarpone cream, espresso and cognac-soaked savoiardi. Finished with a dark chocolate collar. ",
+      "desc": "Mascarpone cream, espresso and cognac-soaked savoiardi. \nFinished with a dark chocolate collar. ",
       "options": [
         {
           "size": "20 cm · serves 10–12",
-          "price": "€60"
+          "price": "€62"
         },
         {
           "size": "16 cm · serves 6–8",
           "price": "€45"
         },
         {
-          "size": "8 cm · serves 1 (minimum 4)",
+          "size": "8 cm · single serving (minimum order: 4)",
           "price": "€12"
         }
       ],
@@ -55,11 +55,11 @@ const LUNA = {
     },
     {
       "name": "Fraisier",
-      "desc": "Traditional French strawberry cake featuring layers of vanilla sponge, silky mousseline cream, and fresh strawberries. Finished with a strawberry glaze. ",
+      "desc": "Traditional French strawberry cake featuring layers of vanilla sponge, silky mousseline cream, and fresh strawberries. \nFinished with a strawberry glaze. ",
       "allergens": [
         "Gluten",
-        "Milk",
         "Eggs",
+        "Milk",
         "Nuts"
       ],
       "photo": "fraisier.jpg",
@@ -76,9 +76,9 @@ const LUNA = {
     },
     {
       "name": "Madeline",
-      "unit": "Box of 18",
+      "unit": "box of 18",
       "price": "€27",
-      "desc": "Delicate, shell-shaped French sponge cake with crips golden edges, and a tender buttery crumb. \nFlavors: Plain browned butter | Lemon glaze | Chocolate Hazelnut",
+      "desc": "Delicate, shell-shaped French sponge cake with crispy golden edges, and a tender buttery crumb. \n\nFlavors: Plain brown butter | Lemon glaze | Chocolate Hazelnut",
       "allergens": [
         "Gluten",
         "Eggs",
@@ -92,21 +92,21 @@ const LUNA = {
   "text": {
     "brand": "Luna",
     "heroLabel": "Small-batch bakes · Amsterdam",
-    "tagline": "Artisanal small batches made to order.",
+    "tagline": "Baked at home, in small batches, and made to order.",
     "menuLink": "View the menu",
     "menuLabel": "The menu",
     "menuHeading": "What I bake",
     "allergenLabel": "Contains",
     "orderLabel": "How to order",
-    "orderHeading": "Simple and personal",
+    "orderHeading": "-",
     "steps": [
       {
         "title": "Send a message",
         "text": "Tell me what you'd like and when you'd like to collect it, by WhatsApp or email."
       },
       {
-        "title": "Confirmation",
-        "text": "I'll reply to confirm availability, the total and a pickup time."
+        "title": "Payment and Confirmation",
+        "text": "I'll reply to confirm availability, the total and a pickup time. Followed by a payment link. "
       },
       {
         "title": "Collect your bakes",
