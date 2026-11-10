@@ -98,6 +98,7 @@
   }
   .menu-grid .item { flex: 0 1 calc((100% - 80px) / 3); min-width: 280px; }
   .item .photo {
+    position: relative;
     aspect-ratio: 4 / 5;
     background: var(--teal-deep);
     border: 1px solid var(--rule);
@@ -123,6 +124,37 @@
   .unit { font-size: 13px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--heading); display: block; text-align: right; white-space: nowrap; }
   .item-top > div { flex-shrink: 0; }
   .item p.desc { margin-bottom: 14px; }
+
+  /* "Sold out" stamp */
+  .stamp {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    max-width: 90%;
+    text-align: center;
+    border: 1px solid var(--beige);
+    background: rgba(86, 124, 141, 0.78);
+    -webkit-backdrop-filter: blur(3px);
+    backdrop-filter: blur(3px);
+    color: var(--beige);
+    font-family: var(--sans);
+    font-weight: 500;
+    font-size: 13px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    padding: 12px 26px 12px 30px;   /* extra left pad offsets trailing letter-spacing */
+  }
+  .item.unavailable .photo img { opacity: 0.5; }
+  .item.unavailable .item-top,
+  .item.unavailable .desc,
+  .item.unavailable .sizes,
+  .item.unavailable .allergens { opacity: 0.6; }
+  .special .stamp { position: static; transform: none; display: inline-block; margin: 4px 0 0; }
+  .special.unavailable h3,
+  .special.unavailable .desc,
+  .special.unavailable .sizes,
+  .special.unavailable .price,
+  .special.unavailable .allergens { opacity: 0.55; }
 
   /* Items with several sizes */
   .sizes { list-style: none; margin: 4px 0 18px; }
@@ -301,6 +333,7 @@ const DEFAULT_TEXT = {
     });
     return out;
   }
+  const stampText = x => (x.stampText || "").trim() || "Sold out";
   let allergenLabel = DEFAULT_TEXT.allergenLabel;
   const allergenLine = a => `<p class="allergens"><b>${esc(allergenLabel)}</b>${(a || []).map(esc).join(", ")}</p>`;
   const sizesList = o => `<ul class="sizes">${o.map(x =>
@@ -322,9 +355,10 @@ const DEFAULT_TEXT = {
     // Menu
     document.getElementById("menu-grid").innerHTML = L.menu.map(i => {
       const multi = Array.isArray(i.options) && i.options.length;
+      const un = !!i.unavailable;
       return `
-      <article class="item">
-        <div class="photo">${i.photo ? `<img src="${esc(i.photo)}" alt="${esc(i.name)}" loading="lazy">` : `<span>Photo</span>`}</div>
+      <article class="item${un ? " unavailable" : ""}">
+        <div class="photo">${i.photo ? `<img src="${esc(i.photo)}" alt="${esc(i.name)}" loading="lazy">` : `<span>Photo</span>`}${un ? `<span class="stamp">${esc(stampText(i))}</span>` : ""}</div>
         <div class="item-top">
           <h3>${esc(i.name)}</h3>
           ${multi ? "" : `<div><span class="price">${esc(i.price)}</span><span class="unit">${esc(i.unit)}</span></div>`}
@@ -339,8 +373,10 @@ const DEFAULT_TEXT = {
     const sp = document.getElementById("special"), s = L.special;
     if (s) {
       sp.style.display = "";
+      sp.classList.toggle("unavailable", !!s.unavailable);
       sp.innerHTML = `
         <span class="label">${esc(s.label)}</span>
+        ${s.unavailable ? `<div><span class="stamp">${esc(stampText(s))}</span></div>` : ""}
         <h3>${esc(s.name)}</h3>
         <p class="desc">${esc(s.desc)}</p>
         ${Array.isArray(s.options) && s.options.length
