@@ -31,7 +31,7 @@ const LUNA = {
   "menu": [
     {
       "name": "Tiramisu",
-      "desc": "Mascarpone cream, espresso and cognac-soaked savoiardi. \nFinished with a dark chocolate collar. ",
+      "desc": "Tiramisu entremet layered with mascarpone cream, espresso and cognac-soaked savoiardi. \nFinished with a dark chocolate collar. ",
       "options": [
         {
           "size": "20 cm · serves 10–12",
@@ -57,7 +57,7 @@ const LUNA = {
     },
     {
       "name": "Fraisier",
-      "desc": "Traditional French strawberry cake featuring layers of vanilla sponge, silky mousseline cream, and fresh strawberries. \nFinished with a strawberry glaze. ",
+      "desc": "Traditional French strawberry cake featuring layers of vanilla sponge, silky crème diplomat, and fresh strawberries. \nFinished with a strawberry glaze. ",
       "allergens": [
         "Gluten",
         "Eggs",
@@ -80,9 +80,7 @@ const LUNA = {
       ],
       "photos": [
         "fraisier.jpg"
-      ],
-      "unavailable": true,
-      "stampText": "Not in Season"
+      ]
     },
     {
       "name": "Chocolate Marbled Loaf",
