@@ -79,6 +79,15 @@
     padding-bottom: 6px;
   }
   .scroll-link:hover { border-color: var(--heading); }
+  .qr-btn { margin-top: 30px; width: 30px; height: 30px; padding: 3px; border: 0; background: none; color: var(--heading); opacity: .75; cursor: pointer; transition: opacity .2s; }
+  .qr-btn:hover, .qr-btn:focus-visible { opacity: 1; }
+  .qr-btn svg { display: block; width: 100%; height: 100%; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linejoin: round; }
+  dialog.qr { margin: auto; border: 0; padding: 0; background: #F5EFEB; color: #2F4156; border-radius: 2px; width: min(86vw, 340px); }
+  dialog.qr::backdrop { background: rgba(47,65,86,.78); }
+  dialog.qr .qr-in { position: relative; padding: 30px 30px 24px; text-align: center; }
+  dialog.qr .qr-x { position: absolute; top: 6px; right: 8px; width: 34px; height: 34px; border: 0; background: none; color: #2F4156; font: 300 26px/1 var(--sans); cursor: pointer; }
+  dialog.qr svg.code { display: block; width: 100%; height: auto; }
+  dialog.qr .qr-cap { font-family: var(--serif); font-size: 26px; margin-top: 10px; letter-spacing: .02em; }
 
   /* ---------- Sections ---------- */
   section { padding: 110px 0; border-bottom: 1px solid var(--rule); }
@@ -286,6 +295,10 @@
   <h1 data-t="brand">Luna</h1>
   <span class="label hero-sub" data-t="heroSub">Amsterdam</span>
   <a class="scroll-link label" href="#menu" data-t="menuLink">View the menu</a>
+  <button type="button" class="qr-btn" id="qrOpen" aria-label="Show QR code" title="Show QR code"><svg viewBox="0 0 48 48" aria-hidden="true"><rect x="7" y="7" width="13" height="13" rx="1"/><rect x="28" y="7" width="13" height="13" rx="1"/><rect x="7" y="28" width="13" height="13" rx="1"/><path d="M12 12h3v3h-3zM33 12h3v3h-3zM12 33h3v3h-3zM28 28h5v5h-5zM37 28h4v4M28 37h3v4M35 36h6v5h-6z"/></svg></button>
+  <dialog class="qr" id="qrDlg" aria-label="QR code for the Luna page"><div class="qr-in"><button type="button" class="qr-x" id="qrClose" aria-label="Close">&times;</button>
+    <svg class="code" viewBox="-4 -4 37 37" role="img" aria-label="QR code linking to this page" shape-rendering="crispEdges"><path fill="#2F4156" d="M0 0h7v1h-7zM9 0h2v1h-2zM12 0h3v1h-3zM17 0h3v1h-3zM22 0h7v1h-7zM0 1h1v1h-1zM6 1h1v1h-1zM10 1h2v1h-2zM13 1h3v1h-3zM17 1h1v1h-1zM19 1h1v1h-1zM22 1h1v1h-1zM28 1h1v1h-1zM0 2h1v1h-1zM2 2h3v1h-3zM6 2h1v1h-1zM8 2h5v1h-5zM14 2h2v1h-2zM17 2h1v1h-1zM19 2h2v1h-2zM22 2h1v1h-1zM24 2h3v1h-3zM28 2h1v1h-1zM0 3h1v1h-1zM2 3h3v1h-3zM6 3h1v1h-1zM13 3h1v1h-1zM18 3h2v1h-2zM22 3h1v1h-1zM24 3h3v1h-3zM28 3h1v1h-1zM0 4h1v1h-1zM2 4h3v1h-3zM6 4h1v1h-1zM8 4h1v1h-1zM11 4h1v1h-1zM14 4h2v1h-2zM17 4h2v1h-2zM22 4h1v1h-1zM24 4h3v1h-3zM28 4h1v1h-1zM0 5h1v1h-1zM6 5h1v1h-1zM8 5h1v1h-1zM11 5h3v1h-3zM15 5h1v1h-1zM19 5h1v1h-1zM22 5h1v1h-1zM28 5h1v1h-1zM0 6h7v1h-7zM8 6h1v1h-1zM10 6h1v1h-1zM12 6h1v1h-1zM14 6h1v1h-1zM16 6h1v1h-1zM18 6h1v1h-1zM20 6h1v1h-1zM22 6h7v1h-7zM9 7h1v1h-1zM12 7h3v1h-3zM17 7h1v1h-1zM20 7h1v1h-1zM1 8h1v1h-1zM4 8h1v1h-1zM6 8h1v1h-1zM8 8h3v1h-3zM14 8h1v1h-1zM17 8h1v1h-1zM19 8h3v1h-3zM23 8h2v1h-2zM26 8h1v1h-1zM2 9h1v1h-1zM4 9h2v1h-2zM8 9h5v1h-5zM15 9h3v1h-3zM20 9h1v1h-1zM22 9h3v1h-3zM26 9h3v1h-3zM0 10h7v1h-7zM8 10h1v1h-1zM12 10h1v1h-1zM14 10h2v1h-2zM17 10h2v1h-2zM20 10h2v1h-2zM25 10h2v1h-2zM28 10h1v1h-1zM1 11h2v1h-2zM4 11h2v1h-2zM7 11h1v1h-1zM11 11h1v1h-1zM13 11h1v1h-1zM16 11h2v1h-2zM19 11h3v1h-3zM25 11h1v1h-1zM27 11h2v1h-2zM2 12h1v1h-1zM4 12h7v1h-7zM12 12h4v1h-4zM17 12h1v1h-1zM20 12h1v1h-1zM23 12h1v1h-1zM25 12h1v1h-1zM28 12h1v1h-1zM0 13h1v1h-1zM4 13h2v1h-2zM7 13h1v1h-1zM9 13h2v1h-2zM12 13h5v1h-5zM22 13h1v1h-1zM24 13h1v1h-1zM26 13h1v1h-1zM28 13h1v1h-1zM0 14h7v1h-7zM8 14h1v1h-1zM10 14h2v1h-2zM17 14h2v1h-2zM21 14h2v1h-2zM24 14h1v1h-1zM28 14h1v1h-1zM0 15h2v1h-2zM5 15h1v1h-1zM7 15h4v1h-4zM13 15h1v1h-1zM16 15h4v1h-4zM21 15h1v1h-1zM23 15h1v1h-1zM25 15h1v1h-1zM27 15h1v1h-1zM0 16h1v1h-1zM2 16h1v1h-1zM5 16h2v1h-2zM8 16h3v1h-3zM13 16h1v1h-1zM15 16h1v1h-1zM17 16h1v1h-1zM19 16h2v1h-2zM23 16h1v1h-1zM27 16h2v1h-2zM0 17h1v1h-1zM7 17h2v1h-2zM10 17h1v1h-1zM12 17h1v1h-1zM14 17h1v1h-1zM18 17h1v1h-1zM22 17h4v1h-4zM28 17h1v1h-1zM2 18h1v1h-1zM5 18h2v1h-2zM10 18h3v1h-3zM14 18h2v1h-2zM17 18h2v1h-2zM20 18h1v1h-1zM23 18h1v1h-1zM25 18h1v1h-1zM28 18h1v1h-1zM5 19h1v1h-1zM8 19h3v1h-3zM12 19h1v1h-1zM14 19h1v1h-1zM17 19h2v1h-2zM23 19h3v1h-3zM27 19h2v1h-2zM0 20h3v1h-3zM6 20h3v1h-3zM10 20h1v1h-1zM12 20h2v1h-2zM15 20h3v1h-3zM20 20h5v1h-5zM8 21h1v1h-1zM11 21h3v1h-3zM15 21h1v1h-1zM17 21h4v1h-4zM24 21h1v1h-1zM26 21h1v1h-1zM28 21h1v1h-1zM0 22h7v1h-7zM9 22h1v1h-1zM12 22h1v1h-1zM14 22h2v1h-2zM18 22h3v1h-3zM22 22h1v1h-1zM24 22h1v1h-1zM27 22h2v1h-2zM0 23h1v1h-1zM6 23h1v1h-1zM12 23h1v1h-1zM15 23h3v1h-3zM19 23h2v1h-2zM24 23h2v1h-2zM28 23h1v1h-1zM0 24h1v1h-1zM2 24h3v1h-3zM6 24h1v1h-1zM8 24h4v1h-4zM13 24h1v1h-1zM17 24h1v1h-1zM19 24h6v1h-6zM0 25h1v1h-1zM2 25h3v1h-3zM6 25h1v1h-1zM10 25h6v1h-6zM17 25h2v1h-2zM23 25h1v1h-1zM26 25h1v1h-1zM28 25h1v1h-1zM0 26h1v1h-1zM2 26h3v1h-3zM6 26h1v1h-1zM9 26h3v1h-3zM13 26h1v1h-1zM15 26h1v1h-1zM18 26h4v1h-4zM27 26h2v1h-2zM0 27h1v1h-1zM6 27h1v1h-1zM8 27h2v1h-2zM11 27h2v1h-2zM15 27h3v1h-3zM20 27h1v1h-1zM23 27h1v1h-1zM25 27h1v1h-1zM27 27h2v1h-2zM0 28h7v1h-7zM9 28h1v1h-1zM12 28h2v1h-2zM17 28h1v1h-1zM20 28h1v1h-1zM22 28h1v1h-1zM24 28h2v1h-2zM27 28h1v1h-1z"/></svg>
+    <div class="qr-cap">Luna</div></div></dialog>
 </header>
 
 <main>
@@ -489,6 +502,15 @@ const ICONS = {
     e.preventDefault();
     document.getElementById("menu").scrollIntoView({ behavior: "smooth" });
   });
+
+  (function () {
+    const dlg = document.getElementById("qrDlg"), open = document.getElementById("qrOpen");
+    if (!dlg || !open) return;
+    if (typeof dlg.showModal !== "function") { open.hidden = true; return; }
+    open.addEventListener("click", () => dlg.showModal());
+    document.getElementById("qrClose").addEventListener("click", () => dlg.close());
+    dlg.addEventListener("click", e => { if (e.target === dlg) dlg.close(); });
+  })();
 
   // Live preview from edit.html (display only; it never changes any saved file)
   window.addEventListener("message", e => {
