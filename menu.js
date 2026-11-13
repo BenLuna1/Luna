@@ -9,11 +9,11 @@ const LUNA = {
   "orderInfo": [
     [
       "Lead time",
-      "Please order at least 48 hours ahead"
+      "Please order at least 2 days ahead. For larger orders please order at least 3 days ahead. "
     ],
     [
       "Minimum order",
-      "€25"
+      "€24"
     ],
     [
       "Pickup",
@@ -42,8 +42,8 @@ const LUNA = {
           "price": "€45"
         },
         {
-          "size": "8 cm · single serving (minimum order: 4)",
-          "price": "€12"
+          "size": "8 cm · double/double serving (4 count)",
+          "price": "€48"
         }
       ],
       "allergens": [
@@ -67,20 +67,40 @@ const LUNA = {
       "options": [
         {
           "size": "20 cm · serves 10–12",
-          "price": "€55"
+          "price": "€60"
         },
         {
           "size": "16 cm · serves 6–8",
           "price": "€42"
+        },
+        {
+          "size": "8 cm · single/double serving (4 count)",
+          "price": "€48"
         }
       ],
       "photos": [
         "fraisier.jpg"
+      ],
+      "unavailable": true,
+      "stampText": "Not in Season"
+    },
+    {
+      "name": "Chocolate Marbled Loaf",
+      "desc": "A classic French-inspired marble loaf with a tender, golden crumb, deep-chocolate ribbons. Finished with a chocolate ganache and cacao nibs. ",
+      "unit": "each",
+      "price": "€24",
+      "allergens": [
+        "Gluten",
+        "Eggs",
+        "Milk"
+      ],
+      "photos": [
+        "loaf.jpg"
       ]
     },
     {
       "name": "Madeline",
-      "unit": "box of 18",
+      "unit": "box of 16",
       "price": "€27",
       "desc": "Delicate, shell-shaped French sponge cake with crispy golden edges, and a tender buttery crumb. \n\nFlavors: Plain brown butter | Lemon glaze | Chocolate Hazelnut",
       "allergens": [
@@ -94,18 +114,18 @@ const LUNA = {
       ]
     },
     {
-      "name": "Chocolate Marbled Loaf",
-      "desc": "A classic French-inspired marble loaf with a tender, golden crumb, deep-chocolate ribbons. Finished with a chocolate ganache topping. ",
-      "unit": "each",
-      "price": "€22",
+      "name": "Chocolate Chip Cookie",
+      "desc": "Chocolate chip cookies with crisp, golden-brown edges, a soft and gooey center, generous pools of melted dark chocolate, and a hint of flaky salt to balance the sweetness. ",
       "allergens": [
         "Gluten",
         "Eggs",
         "Milk"
       ],
       "photos": [
-        "loaf.jpg"
-      ]
+        "chocolatechip.jpg"
+      ],
+      "unit": "12 cookies",
+      "price": "€30"
     }
   ],
   "special": null,
